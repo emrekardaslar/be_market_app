@@ -19,7 +19,7 @@ from rest_framework import routers
 
 from rest_framework.schemas import get_schema_view
 from rest_framework_swagger.views import get_swagger_view
-from quickstart.views import UserViewSet, GroupViewSet
+from manager.views import UserViewSet, GroupViewSet
 from product.views import ProductViewSet, CommentViewSet, RatingViewSet
 
 router = routers.DefaultRouter()

@@ -39,9 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_swagger',
-    'quickstart.apps.QuickstartConfig',
     'product.apps.ProductConfig',
-    'order.apps.OrderConfig'
+    'order.apps.OrderConfig',
+    'manager.apps.ManagerConfig'
 ]
 
 MIDDLEWARE = [
