@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_swagger',
-    'polls.apps.PollsConfig',
     'quickstart.apps.QuickstartConfig',
     'product.apps.ProductConfig',
     'order.apps.OrderConfig'
