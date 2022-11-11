@@ -36,10 +36,10 @@ router.register(r'comment', CommentViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('api_schema', get_schema_view(title='API Schema', description='Guide for the REST API'), name='api_schema'),
-    path('swagger', get_swagger_view(title='My Project')),
+    path('swagger', get_swagger_view(title='Django Rest API')),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api/register', RegisterAPIView.as_view(), name="register"),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/register', RegisterAPIView.as_view(), name="register"),
+    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
