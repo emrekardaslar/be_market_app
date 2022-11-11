@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'polls.apps.PollsConfig',
     'quickstart.apps.QuickstartConfig',
+    'product.apps.ProductConfig'
 ]
 
 MIDDLEWARE = [
