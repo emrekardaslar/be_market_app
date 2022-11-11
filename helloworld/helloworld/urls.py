@@ -16,13 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from quickstart import views
+
 from rest_framework.schemas import get_schema_view
 from rest_framework_swagger.views import get_swagger_view
 
+from quickstart.views import UserViewSet, GroupViewSet
+
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+router.register(r'users', UserViewSet)
+router.register(r'groups', GroupViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
