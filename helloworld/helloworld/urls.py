@@ -21,11 +21,16 @@ from rest_framework.schemas import get_schema_view
 from rest_framework_swagger.views import get_swagger_view
 from polls.views import QuestionsSerializerViewSet
 from quickstart.views import UserViewSet, GroupViewSet
+from product.views import ProductViewSet, CommentViewSet, RatingViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
 router.register(r'questions', QuestionsSerializerViewSet)
+router.register(r'product', ProductViewSet)
+router.register(r'rating', RatingViewSet)
+router.register(r'comment', CommentViewSet)
+
 urlpatterns = [
     path('', include(router.urls)),
     path('api_schema', get_schema_view(title='API Schema', description='Guide for the REST API'), name='api_schema'),

@@ -1,7 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
 from .models import Question
-import datetime
 
 
 class QuestionSerializer(ModelSerializer):
