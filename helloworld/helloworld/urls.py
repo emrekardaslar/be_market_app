@@ -19,8 +19,12 @@ from rest_framework import routers
 
 from rest_framework.schemas import get_schema_view
 from rest_framework_swagger.views import get_swagger_view
-from manager.views import UserViewSet, GroupViewSet
+from manager.views import UserViewSet, GroupViewSet, RegisterAPIView
 from product.views import ProductViewSet, CommentViewSet, RatingViewSet
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -34,5 +38,8 @@ urlpatterns = [
     path('api_schema', get_schema_view(title='API Schema', description='Guide for the REST API'), name='api_schema'),
     path('swagger', get_swagger_view(title='My Project')),
     path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/register', RegisterAPIView.as_view(), name="register"),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
