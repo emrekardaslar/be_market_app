@@ -15,31 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
 
 from rest_framework.schemas import get_schema_view
 from rest_framework_swagger.views import get_swagger_view
-from manager.views import UserViewSet, GroupViewSet, RegisterAPIView
-from product.views import ProductViewSet, CommentViewSet, RatingViewSet
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
-
-router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
-router.register(r'groups', GroupViewSet)
-router.register(r'product', ProductViewSet)
-router.register(r'rating', RatingViewSet)
-router.register(r'comment', CommentViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', include('manager.urls')),
+    path('', include('product.urls')),
+    path('', include('order.urls')),
     path('api_schema', get_schema_view(title='API Schema', description='Guide for the REST API'), name='api_schema'),
     path('swagger', get_swagger_view(title='Django Rest API')),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('auth/register', RegisterAPIView.as_view(), name="register"),
-    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
