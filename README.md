@@ -1,5 +1,11 @@
 # django-practice
 
+## Install dependencies
+* Install dependencies by running:
+```
+pip install -r .\requirements.txt 
+```
+
 ## Create Database Schemas
 
 * First create a database named "djangopractice"
@@ -12,3 +18,9 @@ python manage.py migrate
 ```
 python manage.py createsuperuser
 ```
+## Run the application
+* Run the server by running:
+```
+python manage.py runserver
+```
+* You can access swagger interface by "127.0.0.1:8000/swagger"
