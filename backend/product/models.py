@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     price = models.FloatField()
     imgLink = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
@@ -15,7 +15,7 @@ class Rating(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     value = models.IntegerField(blank=True)
 
 

@@ -18,4 +18,10 @@ class IsReadOnlyButUser(permissions.BasePermission):
         if request.user.is_authenticated or request.method not in self.edit_methods:
             return True
 
+    def has_object_permission(self, request, view, obj):
+        if obj.user == request.user:
+            return True
+        else:
+            return False
+
         return False
