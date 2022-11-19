@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from .models import Product, Comment, Rating, Order, OrderItem
 
 from .serializers import ProductSerializer, CommentSerializer, RatingSerializer, OrderSerializer, OrderItemSerializer
@@ -22,8 +22,10 @@ class RatingViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all().order_by('created_at')
     serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class OrderItemViewSet(viewsets.ModelViewSet):
     queryset = OrderItem.objects.all().order_by("created_at")
     serializer_class = OrderItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
