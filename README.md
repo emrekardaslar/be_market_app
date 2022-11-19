@@ -1,4 +1,4 @@
-# django-practice
+# be_market_app
 
 ## Install dependencies
 * Install dependencies by running:
