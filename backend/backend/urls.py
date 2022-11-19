@@ -22,7 +22,6 @@ from rest_framework_swagger.views import get_swagger_view
 urlpatterns = [
     path('', include('manager.urls')),
     path('', include('product.urls')),
-    path('', include('order.urls')),
     path('api_schema', get_schema_view(title='API Schema', description='Guide for the REST API'), name='api_schema'),
     path('swagger', get_swagger_view(title='Django Rest API')),
     path('admin/', admin.site.urls),

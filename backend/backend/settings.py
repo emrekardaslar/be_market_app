@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     'product.apps.ProductConfig',
-    'order.apps.OrderConfig',
     'manager.apps.ManagerConfig'
 ]
 
