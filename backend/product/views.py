@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions
 from .models import Product, Comment, Rating, Order, OrderItem
+from .pagination import StandardResultsSetPagination
 
 from .serializers import ProductSerializer, CommentSerializer, RatingSerializer, OrderSerializer, OrderItemSerializer
 from .permissions import IsReadOnlyButStaff, IsReadOnlyButUser
@@ -9,6 +10,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all().order_by('name')
     serializer_class = ProductSerializer
     permission_classes = [IsReadOnlyButStaff]
+    pagination_class = StandardResultsSetPagination
 
 
 class CommentViewSet(viewsets.ModelViewSet):
