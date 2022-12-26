@@ -1,16 +1,22 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 from .models import Product, Comment, Rating, Order, OrderItem
 from .pagination import StandardResultsSetPagination
-
+from rest_framework import filters
 from .serializers import ProductSerializer, CommentSerializer, RatingSerializer, OrderSerializer, OrderItemSerializer
 from .permissions import IsReadOnlyButStaff, IsReadOnlyButUser
+from django_filters.rest_framework import DjangoFilterBackend
 
 
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all().order_by('name')
+class ProductViewSet(viewsets.ModelViewSet, generics.ListAPIView):
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsReadOnlyButStaff]
     pagination_class = StandardResultsSetPagination
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
+    filterset_fields = ['category', 'subcategory']
+    ordering_fields = '__all__'
+    ordering = ['name']
+    search_fields = ('name', 'category')
 
 
 class CommentViewSet(viewsets.ModelViewSet):
