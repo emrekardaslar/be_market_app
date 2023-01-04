@@ -1,14 +1,15 @@
-from django.http import JsonResponse
-from requests import Response
-from rest_framework import viewsets, permissions, generics, status
-from .models import Product, Comment, Rating, Order, OrderItem
+from rest_framework.response import Response
+from rest_framework import viewsets, permissions, generics
+from rest_framework.permissions import IsAuthenticated
+
+from .models import Product, Comment, Rating, Order, OrderItem, FavoriteList
 from .pagination import StandardResultsSetPagination
 from rest_framework import filters
 from .serializers import ProductSerializer, CommentSerializer, RatingSerializer, OrderSerializer, OrderItemSerializer, \
-    CategoryNameSerializer
+    CategoryNameSerializer, FavoriteListSerializer
 from .permissions import IsReadOnlyButStaff, IsReadOnlyButUser
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Value, CharField
+from rest_framework import generics
 
 
 class ProductViewSet(viewsets.ModelViewSet, generics.ListAPIView):
@@ -48,6 +49,34 @@ class OrderItemViewSet(viewsets.ModelViewSet):
 
 
 class CategoryNamesViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()# TODO: Product.objects.values_list('category', flat=True).order_by('category').distinct()
+    queryset = Product.objects.all()  # TODO: Product.objects.values_list('category', flat=True).order_by('category').distinct()
     serializer_class = CategoryNameSerializer
 
+
+class FavoriteListViewSet(viewsets.ModelViewSet):
+    queryset = FavoriteList.objects.all()
+    serializer_class = FavoriteListSerializer
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['user_id']
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        if 'user_id' in self.request.query_params:
+            user_id = self.request.query_params['user_id']
+            if user_id != str(user.id):
+                return Response({"error": "You do not have permission to view this user's favorites."}, status=401)
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def get_queryset(self):
+        user = self.request.user
+        if 'user_id' not in self.request.query_params:
+            self.queryset = self.queryset.filter(user=user)
+        return self.queryset

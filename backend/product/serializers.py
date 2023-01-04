@@ -1,8 +1,5 @@
-from abc import ABC
-
 from rest_framework.serializers import ModelSerializer
-from .models import Product, Comment, Rating, Order, OrderItem
-from rest_framework import serializers
+from .models import Product, Comment, Rating, Order, OrderItem, FavoriteList
 
 
 class ProductSerializer(ModelSerializer):
@@ -42,3 +39,9 @@ class CategoryNameSerializer(ModelSerializer):
         fields = [
             'category'
         ]
+
+
+class FavoriteListSerializer(ModelSerializer):
+    class Meta:
+        model = FavoriteList
+        fields = "__all__"
