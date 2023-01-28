@@ -6,7 +6,7 @@ from .models import Product, Comment, Rating, Order, OrderItem, FavoriteList
 from .pagination import StandardResultsSetPagination
 from rest_framework import filters
 from .serializers import ProductSerializer, CommentSerializer, RatingSerializer, OrderSerializer, OrderItemSerializer, \
-    CategoryNameSerializer, FavoriteListSerializer
+    CategoryNameSerializer, FavoriteListSerializer, FavoriteListProductsSerializer
 from .permissions import IsReadOnlyButStaff, IsReadOnlyButUser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
@@ -55,7 +55,6 @@ class CategoryNamesViewSet(viewsets.ModelViewSet):
 
 class FavoriteListViewSet(viewsets.ModelViewSet):
     queryset = FavoriteList.objects.all()
-    serializer_class = FavoriteListSerializer
 
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['user_id']
@@ -74,6 +73,11 @@ class FavoriteListViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return FavoriteListProductsSerializer
+        return FavoriteListSerializer
 
     def get_queryset(self):
         user = self.request.user
