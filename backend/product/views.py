@@ -74,6 +74,17 @@ class FavoriteListViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    def create(self, request, *args, **kwargs):
+        product_id = request.data.get("product")
+        product = Product.objects.get(id=product_id)
+        if request.data.get("user") is None:
+            user = request.user
+        else:
+            user = request.data.get("user")
+        favorite_list = FavoriteList(user=user, product=product)
+        favorite_list.save()
+        return Response(status=200)
+
     def get_serializer_class(self):
         if self.action == 'list':
             return FavoriteListProductsSerializer
