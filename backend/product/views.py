@@ -28,6 +28,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all().order_by('created_at')
     serializer_class = CommentSerializer
     permission_classes = [IsReadOnlyButUser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['product_id']
 
 
 class RatingViewSet(viewsets.ModelViewSet):
