@@ -10,6 +10,7 @@ from .serializers import ProductSerializer, CommentSerializer, RatingSerializer,
 from .permissions import IsReadOnlyButStaff, IsReadOnlyButUser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
+from django.db.models import Avg
 
 
 class ProductViewSet(viewsets.ModelViewSet, generics.ListAPIView):
@@ -36,6 +37,37 @@ class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all().order_by('created_at')
     serializer_class = RatingSerializer
     permission_classes = [IsReadOnlyButUser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['product_id']
+
+    def list(self, request, *args, **kwargs):
+        product_id = request.query_params.get("product_id")
+        if request.data.get("user") is None:
+            user = request.user.id
+        else:
+            user = request.data.get("user")
+
+        avg_rating = self.queryset.filter(product_id=product_id).aggregate(Avg('value'))
+        if user is not None:
+            rating_id = self.queryset.filter(product_id=product_id, user_id=user).first().id
+            return Response({'results': {"avg_rating": avg_rating["value__avg"], "rating_id": rating_id}})
+
+        return Response({'results': {"avg_rating": avg_rating["value__avg"]}})
+
+    def update(self, request, *args, **kwargs):
+        product_id = request.data.get("product")
+        value = request.data.get("value")
+        if request.data.get("user") is None:
+            user_id = request.user.id
+            request.data['user'] = user_id
+        else:
+            user_id = request.data.get("user")
+
+        instance = self.queryset.get(product_id=product_id, user_id=user_id)
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(status=200)
 
 
 class OrderViewSet(viewsets.ModelViewSet):

@@ -16,7 +16,7 @@ class Rating(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    value = models.IntegerField(blank=True)
+    value = models.FloatField(blank=True)
 
 
 class Comment(models.Model):
