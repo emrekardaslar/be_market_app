@@ -23,3 +23,11 @@ services:
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - db
+  fe_market_app:
+    build: C:/Users/user/Documents/Workspace/react/fe_market_app
+    ports:
+      - "3000:3000"
+    environment:
+      - "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/market"
+      - "REACT_APP_BASE_URL=localhost:3000"
+      - "API_URL=http://127.0.0.1:8000"
