@@ -24,3 +24,10 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 * You can access swagger interface by "127.0.0.1:8000/swagger"
+
+## Create & Run Docker containers
+* Run the command below to run the containers.
+
+```
+docker-compose up
+```
