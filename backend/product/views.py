@@ -81,6 +81,34 @@ class OrderItemViewSet(viewsets.ModelViewSet):
     serializer_class = OrderItemSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        if 'user_id' not in self.request.query_params:
+            orders = Order.objects.filter(user_id=user.id)
+            self.queryset = self.queryset.filter(order__in=orders)
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        product_id = request.data.get("product")
+        quantity = request.data.get("quantity")
+        product = Product.objects.get(id=product_id)
+        if request.data.get("user") is None:
+            user = request.user
+        else:
+            user = request.data.get("user")
+        order = Order(user=user)
+        order.save()
+
+        order_item = OrderItem(quantity=quantity, order=order, product=product)
+        order_item.save()
+        return Response(status=200)
+
 
 class CategoryNamesViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()  # TODO: Product.objects.values_list('category', flat=True).order_by('category').distinct()
