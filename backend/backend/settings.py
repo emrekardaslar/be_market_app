@@ -12,9 +12,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os.path
 from pathlib import Path
 from datetime import timedelta
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-xw4v0=hs-*kcb30xz)pswr=0*^or^(!7foyfo6*8c_&lb&f6hk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# Add docker hosts for dev.
+ALLOWED_HOSTS = ["gateway.docker.internal", "host.docker.internal"]
 
 # Application definition
 
@@ -84,7 +84,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -98,7 +97,6 @@ DATABASES = {
         'PORT': '',
     }
 }
-
 
 # DATABASES = {
 #     'default': {
@@ -130,7 +128,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -142,7 +139,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
@@ -152,7 +148,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -172,12 +167,12 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOW_METHODS = [
-  'DELETE',
-  'GET',
-  'OPTIONS',
-  'PATCH',
-  'POST',
-  'PUT',
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
 ]
 
 LOGIN_URL = 'rest_framework:login'
