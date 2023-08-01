@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-xw4v0=hs-*kcb30xz)pswr=0*^or^(!7foyfo6*8c_&lb&f6hk
 DEBUG = True
 
 # Add docker hosts for dev.
-ALLOWED_HOSTS = ["gateway.docker.internal", "host.docker.internal"]
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
