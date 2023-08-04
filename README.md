@@ -31,3 +31,7 @@ python manage.py runserver
 ```
 docker-compose up
 ```
+## Frontend
+
+* You can use https://github.com/emrekardaslar/fe_market_app as your frontend
+* You can modify docker-compose to dockerize your application
