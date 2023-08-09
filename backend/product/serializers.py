@@ -28,6 +28,7 @@ class OrderSerializer(ModelSerializer):
 
 
 class OrderItemSerializer(ModelSerializer):
+    product = ProductSerializer()
     class Meta:
         model = OrderItem
         fields = "__all__"
