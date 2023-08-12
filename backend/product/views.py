@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework import viewsets, permissions, generics
+from rest_framework import viewsets, permissions, generics, status
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Product, Comment, Rating, Order, OrderItem, FavoriteList
@@ -108,6 +108,22 @@ class OrderItemViewSet(viewsets.ModelViewSet):
         order_item = OrderItem(quantity=quantity, order=order, product=product)
         order_item.save()
         return Response(status=200)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if instance.order.user != request.user:
+            return Response({"error": "You don't have permission to remove this order item"},
+                            status=status.HTTP_403_FORBIDDEN)
+
+        self.perform_destroy(instance)
+
+        # Check if the order has any remaining items
+        remaining_order_items = OrderItem.objects.filter(order=instance.order)
+        if not remaining_order_items.exists():
+            instance.order.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CategoryNamesViewSet(viewsets.ModelViewSet):
