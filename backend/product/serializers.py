@@ -21,16 +21,19 @@ class RatingSerializer(ModelSerializer):
         fields = "__all__"
 
 
-class OrderSerializer(ModelSerializer):
+class OrderItemSerializer(ModelSerializer):
+    product = ProductSerializer()
+
     class Meta:
-        model = Order
+        model = OrderItem
         fields = "__all__"
 
 
-class OrderItemSerializer(ModelSerializer):
-    product = ProductSerializer()
+class OrderSerializer(ModelSerializer):
+    items = OrderItemSerializer(many=True, read_only=True, source='orderitem_set')  # Use 'orderitem_set' as the source
+
     class Meta:
-        model = OrderItem
+        model = Order
         fields = "__all__"
 
 
