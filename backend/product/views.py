@@ -97,13 +97,13 @@ class OrderItemViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         product_id = request.data.get("product")
         quantity = request.data.get("quantity")
+        order_id = request.data.get("order")
+        order = Order.objects.get(id=order_id)
         product = Product.objects.get(id=product_id)
         if request.data.get("user") is None:
             user = request.user
         else:
             user = request.data.get("user")
-        order = Order(user=user)
-        order.save()
 
         order_item = OrderItem(quantity=quantity, order=order, product=product)
         order_item.save()
