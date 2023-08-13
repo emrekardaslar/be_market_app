@@ -1,12 +1,47 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from .models import Product, Comment, Rating, Order, OrderItem, FavoriteList
+from .models import Product, Comment, Rating, Order, OrderItem, FavoriteList, Category, Subcategory, Brand
+
+
+class SubcategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subcategory
+        fields = "__all__"
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    subcategories = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+    def get_subcategories(self, obj):
+        return [subcategory.name for subcategory in obj.subcategory_set.all()]
+
+class BrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Brand
+        fields = '__all__'
 
 
 class ProductSerializer(ModelSerializer):
+    category_name = serializers.SerializerMethodField()
+    subcategory_name = serializers.SerializerMethodField()
+    brand_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
         fields = "__all__"
+
+    def get_category_name(self, obj):
+        return obj.subcategory.category.name if obj.subcategory else None
+
+    def get_subcategory_name(self, obj):
+        return obj.subcategory.name if obj.subcategory else None
+
+    def get_brand_name(self, obj):
+        return obj.brand.name if obj.brand else None
 
 
 class CommentSerializer(ModelSerializer):
@@ -37,13 +72,13 @@ class OrderSerializer(ModelSerializer):
         fields = "__all__"
 
 
-class CategoryNameSerializer(ModelSerializer):
-    # category = serializers.CharField()
-    class Meta:
-        model = Product
-        fields = [
-            'category'
-        ]
+# class CategoryNameSerializer(ModelSerializer):
+#     # category = serializers.CharField()
+#     class Meta:
+#         model = Product
+#         fields = [
+#             'category'
+#         ]
 
 
 class FavoriteListProductsSerializer(ModelSerializer):
