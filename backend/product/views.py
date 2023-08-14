@@ -2,11 +2,12 @@ from rest_framework.response import Response
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Product, Comment, Rating, Order, OrderItem, FavoriteList
+from .models import Product, Comment, Rating, Order, OrderItem, FavoriteList, Category, Subcategory, Brand
 from .pagination import StandardResultsSetPagination
 from rest_framework import filters
 from .serializers import ProductSerializer, CommentSerializer, RatingSerializer, OrderSerializer, OrderItemSerializer, \
-    CategoryNameSerializer, FavoriteListSerializer, FavoriteListProductsSerializer
+    FavoriteListSerializer, FavoriteListProductsSerializer, SubcategorySerializer, \
+    CategorySerializer, BrandSerializer
 from .permissions import IsReadOnlyButStaff, IsReadOnlyButUser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
@@ -19,10 +20,9 @@ class ProductViewSet(viewsets.ModelViewSet, generics.ListAPIView):
     permission_classes = [IsReadOnlyButStaff]
     pagination_class = StandardResultsSetPagination
     filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
-    filterset_fields = ['id', 'category', 'subcategory']
     ordering_fields = '__all__'
-    ordering = ['name']
-    search_fields = ('name', 'category')
+    ordering = ['id']
+    search_fields = ['name', 'description', 'subcategory__name', 'subcategory__category__name', 'brand__name']
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -126,9 +126,24 @@ class OrderItemViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class CategoryNamesViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()  # TODO: Product.objects.values_list('category', flat=True).order_by('category').distinct()
-    serializer_class = CategoryNameSerializer
+# class CategoryNamesViewSet(viewsets.ModelViewSet):
+#     queryset = Product.objects.all()  # TODO: Product.objects.values_list('category', flat=True).order_by('category').distinct()
+#     serializer_class = CategoryNameSerializer
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class SubcategoryViewSet(viewsets.ModelViewSet):
+    queryset = Subcategory.objects.all()
+    serializer_class = SubcategorySerializer
+
+
+class BrandViewSet(viewsets.ModelViewSet):
+    queryset = Brand.objects.all()
+    serializer_class = BrandSerializer
 
 
 class FavoriteListViewSet(viewsets.ModelViewSet):

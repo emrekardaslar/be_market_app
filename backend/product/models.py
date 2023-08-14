@@ -2,13 +2,42 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    description = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class Subcategory(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    description = models.CharField(max_length=255)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
+class Brand(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     name = models.CharField(max_length=255, unique=True)
     price = models.FloatField()
     imgLink = models.CharField(max_length=255)
-    category = models.CharField(max_length=255)
-    subcategory = models.CharField(max_length=255)
+    # category = models.CharField(max_length=255)
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     description = models.CharField(max_length=255)
+    brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Rating(models.Model):

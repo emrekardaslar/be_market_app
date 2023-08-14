@@ -31,3 +31,5 @@ services:
       - "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/market"
       - "REACT_APP_BASE_URL=localhost:3000"
       - "API_URL=http://host.docker.internal:8000"
+
+#&& echo \"from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@gmail.com', 'admin')\" | python ./backend/manage.py shell
