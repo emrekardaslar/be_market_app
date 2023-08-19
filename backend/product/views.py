@@ -42,17 +42,30 @@ class RatingViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         product_id = request.query_params.get("product_id")
-        if request.data.get("user") is None:
-            user = request.user.id
-        else:
-            user = request.data.get("user")
+        user = request.data.get("user") or (request.user.id if request.user.is_authenticated else None)
 
         avg_rating = self.queryset.filter(product_id=product_id).aggregate(Avg('value'))
-        if user is not None:
-            rating_id = self.queryset.filter(product_id=product_id, user_id=user).first().id
-            return Response({'results': {"avg_rating": avg_rating["value__avg"], "rating_id": rating_id}})
+        response_data = {"avg_rating": avg_rating["value__avg"]}
 
-        return Response({'results': {"avg_rating": avg_rating["value__avg"]}})
+        if user is not None:
+            user_rating = self.queryset.filter(product_id=product_id, user_id=user).first()
+            if user_rating:
+                response_data["rating_id"] = user_rating.id
+
+        return Response(response_data)
+
+    def create(self, request, *args, **kwargs):
+        product_id = request.data.get("product")
+        value = request.data.get("value")
+        user_id = request.data.get("user") or (request.user.id if request.user.is_authenticated else None)
+
+        try:
+            instance, created = Rating.objects.get_or_create(product_id=product_id, user_id=user_id, value=value)
+            instance.save()
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
         product_id = request.data.get("product")
