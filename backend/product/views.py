@@ -32,6 +32,7 @@ class ProductViewSet(viewsets.ModelViewSet, generics.ListAPIView):
         'price': ['exact', 'gte', 'lte'],
     }
 
+
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all().order_by('created_at')
     serializer_class = CommentSerializer
