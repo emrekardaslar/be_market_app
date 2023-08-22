@@ -12,6 +12,7 @@ from .permissions import IsReadOnlyButStaff, IsReadOnlyButUser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from django.db.models import Avg
+from rest_framework.decorators import action
 
 
 class ProductViewSet(viewsets.ModelViewSet, generics.ListAPIView):
@@ -23,6 +24,24 @@ class ProductViewSet(viewsets.ModelViewSet, generics.ListAPIView):
     ordering_fields = '__all__'
     ordering = ['id']
     search_fields = ['name', 'description', 'subcategory__name', 'subcategory__category__name', 'brand__name']
+
+    @action(detail=False, methods=['GET'])
+    def filter(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        category_name = request.query_params.get('category_name')
+        brand_name = request.query_params.get('brand_name')
+        subcategory = request.query_params.get('subcategory')
+
+        if category_name:
+            queryset = queryset.filter(subcategory__category__name=category_name)
+        if brand_name:
+            queryset = queryset.filter(brand__name=brand_name)
+        if subcategory:
+            queryset = queryset.filter(subcategory__name=subcategory)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
